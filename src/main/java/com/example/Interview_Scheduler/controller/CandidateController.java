@@ -1,12 +1,9 @@
 package com.example.Interview_Scheduler.controller;
 
-
 import com.example.Interview_Scheduler.dto.CandidateDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
-
 import java.util.List;
 
 @RestController
@@ -27,10 +24,8 @@ public class CandidateController {
         return ResponseEntity.ok(candidateService.getCandidate(id));
     }
 
-
     @DeleteMapping("/batch/{batchId}")
     public ResponseEntity<String> deleteBatch(@PathVariable Long batchId) {
-
         candidateService.deleteBatch(batchId);
 
         return ResponseEntity.ok("Batch deleted successfully");
