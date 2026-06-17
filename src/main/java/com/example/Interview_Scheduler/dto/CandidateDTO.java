@@ -29,7 +29,7 @@ public class CandidateDTO {
     @NotBlank(message = "Panel timing is required")
     private LocalDateTime panelTiming;
 
-    @NotBlank(message = "Google Meet link is required")
+    @NotBlank(message = "Google meet link is required")
     @Pattern(regexp = "^(http|https)://.*$", message = "Invalid Google Meet URL")
     private String gmeetLink;
 

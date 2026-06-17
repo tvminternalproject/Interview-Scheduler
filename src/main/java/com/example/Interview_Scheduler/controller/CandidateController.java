@@ -1,6 +1,7 @@
 package com.example.Interview_Scheduler.controller;
 
 import com.example.Interview_Scheduler.dto.CandidateDTO;
+import com.example.Interview_Scheduler.service.CandidateService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
