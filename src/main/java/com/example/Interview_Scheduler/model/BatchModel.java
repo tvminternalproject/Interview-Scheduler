@@ -22,8 +22,8 @@ public class BatchModel {
     private Long id;
 
 
-    @OneToMany(mappedBy = "batchInfo", cascade = CascadeType.ALL, orphanRemoval = true)
-//    private List<InterviewCandidate> candidates = new ArrayList<>();
+    @OneToMany(mappedBy = "batch_info", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<InterviewCandidate> candidates = new ArrayList<>();
 
     @Column(name = "file_name", nullable = false)
     private String fileName;
@@ -38,8 +38,4 @@ public class BatchModel {
     @Column(name = "created_at", updatable = false)
     private LocalDateTime createdAt = LocalDateTime.now();
 
-//    public void addCandidate(InterviewCandidate candidate) {
-//        candidates.add(candidate);
-//        candidate.setBatchid(this);
-    }
 }
