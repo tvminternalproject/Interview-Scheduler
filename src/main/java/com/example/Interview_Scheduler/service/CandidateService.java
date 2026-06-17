@@ -3,11 +3,9 @@ package com.example.Interview_Scheduler.service;
 import com.example.Interview_Scheduler.dto.CandidateDTO;
 import com.example.Interview_Scheduler.model.Candidate;
 import com.example.Interview_Scheduler.repository.CandidateRepository;
-
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
@@ -17,7 +15,6 @@ import java.util.List;
 public class CandidateService {
 
     private final CandidateRepository candidateRepository;
-
 
     public List<CandidateDTO> getCandidatesByBatch(Long batchId){
        List<Candidate> candidate = candidateRepository.findByBatchId(batchId);
@@ -37,16 +34,16 @@ public class CandidateService {
 
     @Transactional
     public void deleteBatch(Long batchId) {
+//        Todo - Add batchRepository to check the BatchId from the Database
 //        if (!batchRepository.existsById(batchId)) {
 //            throw new RuntimeException("Batch not found: " + batchId);
 //        }
         candidateRepository.deleteByBatchId(batchId);
-
+//      Todo - To Delete the records using given batchId
 //        batchRepository.deleteById(batchId);
     }
 
-
-    //dto mapping
+    //DTO Mapping
     private CandidateDTO mapToDto(Candidate candidate){
         CandidateDTO candidateDTO = new CandidateDTO();
         candidateDTO.setName(candidate.getName());
@@ -77,5 +74,4 @@ public class CandidateService {
         candidate.setInterviewerName(candidateDTO.getInterviewerName());
         return candidate;
     }
-
 }
