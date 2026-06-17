@@ -46,4 +46,7 @@ public class Candidate {
 
     @Column(name = "created_at")
     private LocalDateTime createdAt;
+
+    @Column(name = "excel_row_id")
+    private Integer excelRowId;
 }
