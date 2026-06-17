@@ -1,6 +1,6 @@
 package com.example.Interview_Scheduler.model;
 
-import com.example.Interview_Scheduler.model.BatchStatus;
+import com.example.Interview_Scheduler.dto.CandidateDTO;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -23,7 +23,7 @@ public class BatchModel {
 
 
     @OneToMany(mappedBy = "batch_info", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<InterviewCandidate> candidates = new ArrayList<>();
+    private List<CandidateDTO> candidates = new ArrayList<>();
 
     @Column(name = "file_name", nullable = false)
     private String fileName;
