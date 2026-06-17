@@ -36,6 +36,6 @@ public class BatchModel {
     private BatchStatus status;
 
     @Column(name = "created_at", updatable = false)
-    private LocalDateTime createdAt = LocalDateTime.now();
+    private LocalDateTime createdAt;
 
 }
