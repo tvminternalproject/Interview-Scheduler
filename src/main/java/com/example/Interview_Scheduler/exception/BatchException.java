@@ -6,6 +6,6 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 @ResponseStatus(HttpStatus.BAD_REQUEST)
 public class BatchException extends RuntimeException {
     public BatchException(String message) {
-         super(message);
+        super(message);
     }
 }

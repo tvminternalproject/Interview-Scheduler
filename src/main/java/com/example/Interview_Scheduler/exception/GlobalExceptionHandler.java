@@ -20,6 +20,7 @@ public class GlobalExceptionHandler {
         body.put("status", HttpStatus.BAD_REQUEST.value());
         body.put("error", "Excel Parsing Error");
         body.put("message", ex.getMessage());
+
         return new ResponseEntity<>(body, HttpStatus.BAD_REQUEST);
     }
 
