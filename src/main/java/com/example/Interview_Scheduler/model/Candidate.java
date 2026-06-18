@@ -18,8 +18,6 @@ public class Candidate {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private Long batchId;
-
     @Column(name = "name", nullable = false)
     private String name;
 
@@ -47,6 +45,7 @@ public class Candidate {
     @Column(name = "created_at")
     private LocalDateTime createdAt;
 
-    @Column(name = "excel_row_id")
-    private Integer excelRowId;
+   @ManyToOne
+   @JoinColumn(name = "batch_id")
+   private BatchModel batch;
 }

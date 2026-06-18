@@ -12,9 +12,4 @@ public interface CandidateRepository extends JpaRepository<Candidate, Long> {
     List<Candidate> findByBatchId(Long batchId);
 
     void deleteByBatchId(Long batchId);
-
-    Optional<Candidate> findByBatchIdAndExcelRowId(
-            Long batchId,
-            Integer excelRowId
-    );
 }
