@@ -47,5 +47,4 @@ public class Candidate {
     @Column(name = "created_at")
     private LocalDateTime createdAt;
 
-
 }

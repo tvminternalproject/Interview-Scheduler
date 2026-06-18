@@ -18,7 +18,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.InputStream;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
+
 
 @Slf4j
 @Service
@@ -42,7 +42,6 @@ public class CandidateService {
                         "No candidates found for batch : " + batchId
                 );
             }
-
             return candidates.stream()
                     .map(this::mapToDto)
                     .toList();
@@ -134,13 +133,11 @@ public class CandidateService {
                 }
 
                 log.info("Excel Upload Completed");
-
                 return "Excel Uploaded Successfully";
 
             } catch (Exception e) {
 
                 log.error("Excel Upload Failed", e);
-
                 throw new RuntimeException(
                         "Error Processing Excel File"
                 );
