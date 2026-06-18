@@ -6,7 +6,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-
 import java.util.List;
 
 @RestController
@@ -15,6 +14,13 @@ import java.util.List;
 public class CandidateController {
 
     private final CandidateService candidateService;
+
+    @PostMapping("/upload")
+    public ResponseEntity<String> uploadExcel(@RequestParam("file") MultipartFile file) {
+
+        return ResponseEntity.ok(
+                candidateService.uploadCandidates(file));
+    }
 
     @GetMapping
     public ResponseEntity<List<CandidateDTO>> getCandidatesByBatch(@RequestParam Long batchId) {
@@ -34,11 +40,10 @@ public class CandidateController {
         return ResponseEntity.ok("Batch deleted successfully");
     }
 
-    @PostMapping("/upload")
-    public ResponseEntity<String> uploadExcel(
-            @RequestParam("file") MultipartFile file) {
+    @DeleteMapping("/{candidateId}")
+    public ResponseEntity<String> deleteCandidate(@PathVariable Long candidateId) {
+        candidateService.deleteCandidate(candidateId);
 
-        return ResponseEntity.ok(
-                candidateService.uploadCandidates(file));
+        return ResponseEntity.ok("Candidate deleted successfully");
     }
 }
