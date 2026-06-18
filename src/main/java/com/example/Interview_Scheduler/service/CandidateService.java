@@ -115,7 +115,6 @@ public class CandidateService {
                                 LocalDateTime.parse(panelTime)
                         );
                     }
-
                     candidate.setGMeetLink(meetLink);
                     candidate.setInterviewerName(interviewer);
                     candidate.setCreatedAt(LocalDateTime.now());
