@@ -44,7 +44,6 @@ public class CandidateService {
                     .toList();
         }
 
-
         public CandidateDTO getCandidate(Long id) {
             Candidate candidate = candidateRepository.findById(id)
                             .orElseThrow(() ->
@@ -53,6 +52,7 @@ public class CandidateService {
                                     ));
             return mapToDto(candidate);
         }
+
         @Transactional
         public void deleteBatch(Long batchId) {
 
@@ -60,6 +60,7 @@ public class CandidateService {
             candidateRepository.deleteByBatchId(batchId);
             log.info("Batch deleted successfully : {}", batchId);
         }
+
         @Transactional
         public String uploadCandidates(MultipartFile file) {
 
@@ -129,8 +130,8 @@ public class CandidateService {
             }
         }
 
-    private void validateExcelFile(MultipartFile file) {
-        if (file == null || file.isEmpty()) {
+        private void validateExcelFile(MultipartFile file) {
+            if (file == null || file.isEmpty()) {
             throw new ExcelParseException("File is empty!");
         }
 
@@ -138,10 +139,10 @@ public class CandidateService {
         if (fileName == null || (!fileName.endsWith(".xlsx") && !fileName.endsWith(".xls"))) {
             throw new ExcelParseException("Only Excel files (.xlsx, .xls) are allowed!");
         }
-    }
+        }
 
-    private int countRowsInExcel(MultipartFile file) {
-        try (InputStream inputStream = file.getInputStream();
+        private int countRowsInExcel(MultipartFile file) {
+            try (InputStream inputStream = file.getInputStream();
              Workbook workbook = new XSSFWorkbook(inputStream)) {
 
             Sheet sheet = workbook.getSheetAt(0);
@@ -152,7 +153,7 @@ public class CandidateService {
         } catch (Exception e) {
             throw new ExcelParseException("Failed to read Excel file: " + e.getMessage());
         }
-    }
+        }
 
         private CandidateDTO mapToDto(
                 Candidate candidate
