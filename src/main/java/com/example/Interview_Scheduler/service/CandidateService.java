@@ -11,6 +11,9 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.cache.annotation.Caching;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -29,6 +32,7 @@ public class CandidateService {
         private final CandidateRepository candidateRepository;
         private final BatchRepository batchRepository;
 
+        @Cacheable(value = "batchCandidates", key = "#batchId")
         public List<CandidateDTO> getCandidatesByBatch(Long batchId) {
 
             List<Candidate> candidates = candidateRepository.findByBatchId(batchId);
@@ -42,6 +46,7 @@ public class CandidateService {
                     .toList();
         }
 
+        @Cacheable(value = "candidate", key = "#id")
         public CandidateDTO getCandidate(Long id) {
 
             Candidate candidate = candidateRepository.findById(id)
@@ -50,6 +55,8 @@ public class CandidateService {
             return mapToDto(candidate);
         }
 
+        @Caching(evict = {@CacheEvict(value = "batchCandidates", key = "#batchId"),
+            @CacheEvict(value = "candidate", allEntries = true)})
         @Transactional
         public void deleteBatch(Long batchId) {
             if(batchRepository.existsById(batchId)) {
@@ -62,6 +69,7 @@ public class CandidateService {
             }
         }
 
+        @CacheEvict(value = {"batchCandidates", "candidate"}, allEntries = true)
         @Transactional
         public String uploadCandidates(MultipartFile file) {
             if (file == null || file.isEmpty()) {
@@ -159,6 +167,7 @@ public class CandidateService {
             }
         }
 
+    @CacheEvict(value = "candidate", key = "#candidateId")
     @Transactional
     public void deleteCandidate(Long candidateId) {
         if (!candidateRepository.existsById(candidateId)) {
