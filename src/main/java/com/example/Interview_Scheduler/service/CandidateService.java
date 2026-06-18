@@ -161,7 +161,6 @@ public class CandidateService {
 
     @Transactional
     public void deleteCandidate(Long candidateId) {
-
         if (!candidateRepository.existsById(candidateId)) {
             throw new RuntimeException("Candidate not found : " + candidateId);
         }

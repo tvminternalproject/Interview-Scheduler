@@ -45,7 +45,7 @@ public class Candidate {
     @Column(name = "created_at")
     private LocalDateTime createdAt;
 
-   @ManyToOne
-   @JoinColumn(name = "batch_id")
-   private BatchModel batch;
+    @ManyToOne
+    @JoinColumn(name = "batch_id")
+    private BatchModel batch;
 }
