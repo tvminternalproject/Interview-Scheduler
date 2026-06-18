@@ -31,7 +31,7 @@ public class CandidateService {
         @Autowired
         private BatchRepository batchRepository;
 
-    public List<CandidateDTO> getCandidatesByBatch(Long batchId) {
+        public List<CandidateDTO> getCandidatesByBatch(Long batchId) {
             List<Candidate> candidates = candidateRepository.findByBatchId(batchId);
 
             if (candidates.isEmpty()) {
@@ -51,7 +51,6 @@ public class CandidateService {
                                     new ExcelParseException(
                                             "Candidate Not Found : " + id
                                     ));
-
             return mapToDto(candidate);
         }
         @Transactional
@@ -85,9 +84,7 @@ public class CandidateService {
                 Sheet sheet = workbook.getSheetAt(0);
 
                 for (int i = 1; i <= sheet.getLastRowNum(); i++) {
-
                     Row row = sheet.getRow(i);
-
                     if (row == null) {
                         continue;
                     }
@@ -100,7 +97,6 @@ public class CandidateService {
                     String panelTime = getCellValue(row.getCell(5));
                     String meetLink = getCellValue(row.getCell(6));
                     String interviewer = getCellValue(row.getCell(7));
-
 
                     Candidate  candidate = new Candidate();
                     candidate.setName(name);
@@ -124,9 +120,8 @@ public class CandidateService {
 
                 log.info("Excel Upload Completed");
                 return "Excel Uploaded Successfully";
-
-            } catch (Exception e) {
-
+            }
+            catch (Exception e) {
                 log.error("Excel Upload Failed", e);
                 throw new ExcelParseException(
                         "Error Processing Excel File"
@@ -193,7 +188,6 @@ public class CandidateService {
         private Candidate mapToEntity(
                 CandidateDTO dto
         ) {
-
             Candidate candidate = new Candidate();
 
             candidate.setName(dto.getName());
@@ -241,7 +235,6 @@ public class CandidateService {
                     return String.valueOf(
                             cell.getBooleanCellValue()
                     );
-
                 default:
                     return "";
             }
