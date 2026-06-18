@@ -1,13 +1,17 @@
 package com.example.Interview_Scheduler.service;
 
 import com.example.Interview_Scheduler.dto.CandidateDTO;
+import com.example.Interview_Scheduler.model.BatchModel;
+import com.example.Interview_Scheduler.model.BatchStatus;
 import com.example.Interview_Scheduler.model.Candidate;
+import com.example.Interview_Scheduler.repository.BatchRepository;
 import com.example.Interview_Scheduler.repository.CandidateRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -21,11 +25,15 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class CandidateService {
 
-
+        @Autowired
         private final CandidateRepository candidateRepository;
 
+    @Autowired
+    private BatchRepository batchRepository;
 
-        public List<CandidateDTO> getCandidatesByBatch(Long batchId) {
+
+
+    public List<CandidateDTO> getCandidatesByBatch(Long batchId) {
 
             List<Candidate> candidates = candidateRepository.findByBatchId(batchId);
 
@@ -65,6 +73,17 @@ public class CandidateService {
 
             log.info("Excel Upload Started : {}",
                     file.getOriginalFilename());
+            validateExcelFile(file);
+
+            int totalCandidates = countRowsInExcel(file);
+
+
+            BatchModel batchInfo = new BatchModel();
+            batchInfo.setFileName(file.getOriginalFilename());
+            batchInfo.setTotalCandidates(totalCandidates);
+            batchInfo.setStatus(BatchStatus.UPLOADED);
+            batchInfo.setCreatedAt(LocalDateTime.now());
+            batchRepository.save(batchInfo);
 
             try (
                     InputStream inputStream = file.getInputStream();
@@ -73,7 +92,6 @@ public class CandidateService {
             ) {
 
                 Sheet sheet = workbook.getSheetAt(0);
-                Long batchId = 1L;
 
                 for (int i = 1; i <= sheet.getLastRowNum(); i++) {
 
@@ -93,30 +111,8 @@ public class CandidateService {
                     String meetLink = getCellValue(row.getCell(6));
                     String interviewer = getCellValue(row.getCell(7));
 
-                    Optional<Candidate> existingCandidate =
-                            candidateRepository
-                                    .findByBatchIdAndExcelRowId(
-                                            batchId,
-                                            excelRowId
-                                    );
 
-                    Candidate candidate;
-
-                    if (existingCandidate.isPresent()) {
-
-                        candidate = existingCandidate.get();
-                        log.info("Updating Candidate Row : {}", excelRowId);
-
-                    } else {
-
-                        candidate = new Candidate();
-
-                        candidate.setBatchId(batchId);
-                        candidate.setExcelRowId(excelRowId);
-
-                        log.info("Creating Candidate Row : {}", excelRowId);
-                    }
-
+                    Candidate  candidate = new Candidate();
                     candidate.setName(name);
                     candidate.setEmail(email);
                     candidate.setWhatsappNumber(whatsapp);
@@ -150,6 +146,31 @@ public class CandidateService {
                 );
             }
         }
+
+    private void validateExcelFile(MultipartFile file) {
+        if (file == null || file.isEmpty()) {
+            throw new RuntimeException("File is empty!");
+        }
+
+        String fileName = file.getOriginalFilename();
+        if (fileName == null || (!fileName.endsWith(".xlsx") && !fileName.endsWith(".xls"))) {
+            throw new RuntimeException("Only Excel files (.xlsx, .xls) are allowed!");
+        }
+    }
+
+    private int countRowsInExcel(MultipartFile file) {
+        try (InputStream inputStream = file.getInputStream();
+             Workbook workbook = new XSSFWorkbook(inputStream)) {
+
+            Sheet sheet = workbook.getSheetAt(0);
+            int totalRows = sheet.getLastRowNum();
+
+            return totalRows > 0 ? totalRows : 0;
+
+        } catch (Exception e) {
+            throw new RuntimeException("Failed to read Excel file: " + e.getMessage(), e);
+        }
+    }
 
         private CandidateDTO mapToDto(
                 Candidate candidate
