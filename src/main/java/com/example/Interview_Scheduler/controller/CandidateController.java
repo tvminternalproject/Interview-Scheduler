@@ -35,7 +35,6 @@ public class CandidateController {
     @DeleteMapping("/batch/{batchId}")
     public ResponseEntity<String> deleteBatch(@PathVariable Long batchId) {
         candidateService.deleteBatch(batchId);
-
         return ResponseEntity.ok("Batch deleted successfully");
     }
 
