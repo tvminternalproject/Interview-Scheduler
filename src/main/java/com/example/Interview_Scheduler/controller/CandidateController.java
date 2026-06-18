@@ -18,8 +18,7 @@ public class CandidateController {
     @PostMapping("/upload")
     public ResponseEntity<String> uploadExcel(@RequestParam("file") MultipartFile file) {
 
-        return ResponseEntity.ok(
-                candidateService.uploadCandidates(file));
+        return ResponseEntity.ok(candidateService.uploadCandidates(file));
     }
 
     @GetMapping

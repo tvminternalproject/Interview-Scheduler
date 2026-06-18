@@ -2,6 +2,7 @@ package com.example.Interview_Scheduler.dto;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 import jakarta.validation.constraints.Pattern;
 import java.time.LocalDateTime;
@@ -26,7 +27,7 @@ public class CandidateDTO {
     @NotBlank(message = "Company name is required")
     private String companyName;
 
-    @NotBlank(message = "Panel timing is required")
+    @NotNull(message = "Panel timing is required")
     private LocalDateTime panelTiming;
 
     @NotBlank(message = "Google meet link is required")
