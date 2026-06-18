@@ -6,6 +6,6 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 @ResponseStatus(HttpStatus.BAD_REQUEST)
 public class ExcelParseException extends RuntimeException {
     public ExcelParseException(String message) {
-        super(message);
+         super(message);
     }
 }
