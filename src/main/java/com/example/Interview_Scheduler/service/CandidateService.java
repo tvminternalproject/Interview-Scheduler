@@ -1,6 +1,7 @@
 package com.example.Interview_Scheduler.service;
 
 import com.example.Interview_Scheduler.dto.CandidateDTO;
+import com.example.Interview_Scheduler.exception.ExcelParseException;
 import com.example.Interview_Scheduler.model.BatchModel;
 import com.example.Interview_Scheduler.model.BatchStatus;
 import com.example.Interview_Scheduler.model.Candidate;
@@ -19,7 +20,6 @@ import java.io.InputStream;
 import java.time.LocalDateTime;
 import java.util.List;
 
-
 @Slf4j
 @Service
 @RequiredArgsConstructor
@@ -28,17 +28,14 @@ public class CandidateService {
         @Autowired
         private final CandidateRepository candidateRepository;
 
-    @Autowired
-    private BatchRepository batchRepository;
-
-
+        @Autowired
+        private BatchRepository batchRepository;
 
     public List<CandidateDTO> getCandidatesByBatch(Long batchId) {
-
             List<Candidate> candidates = candidateRepository.findByBatchId(batchId);
 
             if (candidates.isEmpty()) {
-                throw new RuntimeException(
+                throw new ExcelParseException(
                         "No candidates found for batch : " + batchId
                 );
             }
@@ -49,16 +46,14 @@ public class CandidateService {
 
 
         public CandidateDTO getCandidate(Long id) {
-
             Candidate candidate = candidateRepository.findById(id)
                             .orElseThrow(() ->
-                                    new RuntimeException(
+                                    new ExcelParseException(
                                             "Candidate Not Found : " + id
                                     ));
 
             return mapToDto(candidate);
         }
-
         @Transactional
         public void deleteBatch(Long batchId) {
 
@@ -66,7 +61,6 @@ public class CandidateService {
             candidateRepository.deleteByBatchId(batchId);
             log.info("Batch deleted successfully : {}", batchId);
         }
-
         @Transactional
         public String uploadCandidates(MultipartFile file) {
 
@@ -75,8 +69,6 @@ public class CandidateService {
             validateExcelFile(file);
 
             int totalCandidates = countRowsInExcel(file);
-
-
             BatchModel batchInfo = new BatchModel();
             batchInfo.setFileName(file.getOriginalFilename());
             batchInfo.setTotalCandidates(totalCandidates);
@@ -100,7 +92,6 @@ public class CandidateService {
                         continue;
                     }
 
-                    Integer excelRowId = i;
                     String name = getCellValue(row.getCell(0));
                     String email = getCellValue(row.getCell(1));
                     String whatsapp = getCellValue(row.getCell(2));
@@ -138,7 +129,7 @@ public class CandidateService {
             } catch (Exception e) {
 
                 log.error("Excel Upload Failed", e);
-                throw new RuntimeException(
+                throw new ExcelParseException(
                         "Error Processing Excel File"
                 );
             }
@@ -146,12 +137,12 @@ public class CandidateService {
 
     private void validateExcelFile(MultipartFile file) {
         if (file == null || file.isEmpty()) {
-            throw new RuntimeException("File is empty!");
+            throw new ExcelParseException("File is empty!");
         }
 
         String fileName = file.getOriginalFilename();
         if (fileName == null || (!fileName.endsWith(".xlsx") && !fileName.endsWith(".xls"))) {
-            throw new RuntimeException("Only Excel files (.xlsx, .xls) are allowed!");
+            throw new ExcelParseException("Only Excel files (.xlsx, .xls) are allowed!");
         }
     }
 
@@ -165,7 +156,7 @@ public class CandidateService {
             return totalRows > 0 ? totalRows : 0;
 
         } catch (Exception e) {
-            throw new RuntimeException("Failed to read Excel file: " + e.getMessage(), e);
+            throw new ExcelParseException("Failed to read Excel file: " + e.getMessage());
         }
     }
 
