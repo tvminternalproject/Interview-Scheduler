@@ -85,7 +85,7 @@ public class JwtUtil {
         if (isValid) {
             log.info("Token validated successfully for email: {}", email);
         } else {
-            log.warn("Token validation failed for email: {}", email);
+            log.warn(" Token validation failed for email: {}", email);
         }
 
         return isValid;
